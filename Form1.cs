@@ -12,11 +12,13 @@ namespace Metadata_IO
         public Form1()
         {
             InitializeComponent();
+            pictureBox1.AllowDrop = true;
         }
 
 
         OpenFileDialog openImage;
         String pathImage = "";
+       
 
         Dictionary<string, int> property = new Dictionary<string, int> // Data should be decoded according to EXIF specification
         {                                                              // 
@@ -79,6 +81,31 @@ namespace Metadata_IO
                 }
             }
 
+        }
+
+        private void pictureBox1_DragEnter(object sender, System.Windows.Forms.DragEventArgs e)
+        {
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+                label1.Text = " Drop photo";
+            }
+          
+        }
+
+        private void pictureBox1_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] data = (string[])e.Data.GetData(DataFormats.FileDrop);
+            ExifToText(data[0].ToString());
+            label1.Visible = false;
+            label1.Enabled = false;
+        }
+
+        private void pictureBox1_DragLeave(object sender, EventArgs e)
+        {
+            label1.Text = "Drag photo into region";
+            label1.TextAlign = ContentAlignment.MiddleCenter;
         }
     }
 }
